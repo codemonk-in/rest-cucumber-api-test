@@ -17,18 +17,23 @@ This project demonstrates structured API testing with Gherkin syntax, mocking, d
 ---
 
 ## 🗂️ Project Structure
-src/test/java/
-├── config/ # API endpoint URLs
-├── hooks/ # Cucumber hooks
-├── runners/ # Cucumber test runner
-├── stepdefinitions/ # Step implementation (BDD steps)
-├── utils/ # Utility classes (logger, payload builder)
-├── validators/ # Response validation logic
-├── unit/ # Unit tests for validators & utils
-
-src/test/resources/
-├── features/ # Cucumber .feature files
-└── testdata/ # JSON request payloads
+rest-cucumber-api-test/
+├── src/
+│ ├── test/java/
+│ │ ├── config/ # API endpoints
+│ │ ├── hooks/ # Cucumber hooks (setup/teardown)
+│ │ ├── runners/ # Test runners
+│ │ ├── stepdefinitions/ # Step definition logic
+│ │ ├── utils/ # Utility classes like payload builders
+│ │ ├── validators/ # Response validators
+│ │ └── unit/ # Unit tests using JUnit + Mockito
+│ └── test/resources/
+│ ├── features/ # Cucumber feature files
+│ └── testdata/ # JSON payloads for POST requests
+├── target/ # Build output and reports (ignored in git)
+├── test-logs/ # Runtime test logs
+├── pom.xml # Maven configuration
+└── README.md # Project documentation
 
 
 ---
@@ -64,6 +69,18 @@ HTML report → target/cucumber-reports/report.html
 JUnit XML → target/cucumber-reports/report.xml
 Surefire logs → target/surefire-reports/
 
+🧾 Test Logs
+
+Each test execution generates a timestamped log file under the test-logs/ directory:
+
+test-logs/
+├── test_log_20250707_193052.txt
+├── test_log_20250707_200703.txt
+...
+These logs are created by the custom utility TestLogger.java.
+They record the test scenario names, execution time, status, and any custom debug messages.
+Useful for auditing and debugging test runs, especially in CI/CD pipelines.
+
 🔧 Sample Feature File
 Feature: GET request verification
 
@@ -73,15 +90,19 @@ Then the status code should be 200
 And response should contain field "ip"
 And response should contain field "headers"
 
-🔍 Sample Validator Snippet
-public class GetResponseValidator {
-    public static void validate(Response response) {
-        response.then().statusCode(200);
-        JsonPath json = response.jsonPath();
-        assertNotNull(json.get("ip"));
-        assertNotNull(json.get("headers"));
-    }
-}
+✅ Validations Performed
+
+GET Response
+    Status code = 200
+    Presence of: path, ip, headers
+POST Response
+Status code = 200
+JSON fields under parsedBody including:
+    order_id
+    customer.name, customer.email
+    payment.transaction_id
+    Item validation inside items[]
+    order_status
 
 🧪 Unit Testing with Mockito
 Unit tests under src/test/java/unit mock Rest Assured Response objects to test validator behavior independently.
