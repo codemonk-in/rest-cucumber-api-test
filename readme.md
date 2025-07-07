@@ -5,7 +5,6 @@ This project demonstrates structured API testing with Gherkin syntax, mocking, d
 ---
 
 ## 🚀 Features
-
 - ✅ BDD-style API testing using Gherkin feature files
 - ✅ Uses **Cucumber 7**, **RestAssured 5**, and **JUnit 4**
 - ✅ Parameterized GET/POST requests with dynamic payloads
