@@ -2,6 +2,7 @@ package unit;
 
 import org.json.JSONObject;
 import org.junit.Test;
+import static org.junit.Assert.*;
 import utils.PayloadBuilder;
 
 /**
@@ -15,10 +16,10 @@ public class PayloadBuilderTest {
 
         JSONObject json = new JSONObject(payload);
 
-        assert json.getString("order_id").equals("12345");
-        assert json.getJSONObject("customer").getString("name").equals("Jane Smith");
-        assert json.getJSONObject("payment").getDouble("amount") == 111.97;
-        assert json.getJSONArray("items").length() == 2;
+        assertEquals("12345", json.getString("order_id"));
+        assertEquals("Jane Smith", json.getJSONObject("customer").getString("name"));
+        assertEquals(111.97, json.getJSONObject("payment").getDouble("amount"), 0.0);
+        assertEquals(2, json.getJSONArray("items").length());
     }
 
     @Test
@@ -26,7 +27,7 @@ public class PayloadBuilderTest {
         String payload = PayloadBuilder.loadJson("order_payload.json");
         JSONObject json = new JSONObject(payload);
 
-        assert json.has("shipping");
-        assert json.getJSONObject("shipping").getString("method").equals("standard");
+        assertTrue(json.has("shipping"));
+        assertEquals("standard", json.getJSONObject("shipping").getString("method"));
     }
 }
